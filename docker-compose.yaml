@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: ai-pulse-mysql
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    ports:
+      - '3306:3306'
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # api:
+  #   build: .
+  #   container_name: ai-pulse-api
+  #   ports:
+  #     - '5000:5000'
+  #   depends_on:
+  #     - mysql
+  #   environment:
+  #     DB_HOST: ${DB_HOST}
+  #     DB_PORT: ${DB_PORT}
+  #     DB_USER: ${DB_USER}
+  #     DB_PASSWORD: ${DB_PASSWORD}
+  #     DB_NAME: ${DB_NAME}
+
+volumes:
+  mysql_data:
