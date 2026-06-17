@@ -1,0 +1,88 @@
+import { db } from '../config/knex';
+import {
+  CreateQuizSessionRequest,
+  QuizSessionRecord,
+  QuizSessionResponse,
+  UpdateQuizSessionRequest,
+} from '../dtos/quiz-session.dto';
+
+export class QuizSessionRepository {
+  private TABLE = 'quiz_sessions';
+
+  private ALLOWED_UPDATE_FIELDS: (keyof UpdateQuizSessionRequest)[] = [
+    'current_question_index',
+    'quiz_status_id',
+    'score_total',
+  ];
+
+  private sanitizeUpdate(dto: UpdateQuizSessionRequest) {
+    const entries = Object.entries(dto).filter(([key, value]) => {
+      return (
+        value !== undefined &&
+        this.ALLOWED_UPDATE_FIELDS.includes(
+          key as keyof UpdateQuizSessionRequest,
+        )
+      );
+    });
+
+    return Object.fromEntries(entries);
+  }
+
+  private mapToResponse(row: QuizSessionRecord): QuizSessionResponse {
+    return {
+      id: row.id,
+      difficulty_level_id: row.difficulty_level_id,
+      difficulty_level: row.difficulty_level,
+      total_questions: row.total_questions,
+      current_question_index: row.current_question_index,
+      quiz_status_id: row.quiz_status_id,
+      quiz_status: row.quiz_status,
+      score_total: row.score_total,
+    };
+  }
+
+  async getAll(): Promise<QuizSessionResponse[]> {
+    const rows: QuizSessionRecord[] = await db(this.TABLE)
+      .select('*')
+      .orderBy('id', 'desc');
+    const responses = rows.map((row) => this.mapToResponse(row));
+    return responses;
+  }
+
+  async getByID(id: number): Promise<QuizSessionResponse | undefined> {
+    const row: QuizSessionRecord = await db('vw_quiz_sessions')
+      .select('*')
+      .where('id', id)
+      .first();
+    if (!row) return undefined;
+    return this.mapToResponse(row);
+  }
+
+  async create(dto: CreateQuizSessionRequest): Promise<number> {
+    const [id] = await db(this.TABLE).insert({
+      difficulty_level_id: dto.difficulty_level_id,
+      total_questions: dto.total_questions,
+      quiz_status_id: dto.quiz_status_id,
+    });
+
+    return id;
+  }
+
+  async update(
+    id: number,
+    dto: UpdateQuizSessionRequest,
+  ): Promise<QuizSessionResponse | undefined> {
+    const clean = this.sanitizeUpdate(dto);
+
+    if (Object.keys(clean).length === 0) {
+      throw new Error('No valid fields to update');
+    }
+
+    await db(this.TABLE)
+      .where({ id })
+      .andWhere('completed_at', null)
+      .update(clean);
+
+    return this.getByID(id);
+  }
+}
