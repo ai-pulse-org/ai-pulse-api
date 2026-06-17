@@ -6,6 +6,7 @@ import {
   QuizSessionResponse,
   UpdateQuizSessionRequest,
 } from '../dtos/quiz-session.dto';
+import { ValidationError } from '../errors/ValidationError';
 
 export class QuizSessionRepository {
   // Private members
@@ -65,11 +66,15 @@ export class QuizSessionRepository {
     const clean = sanitizeUpdate(dto, this.ALLOWED_UPDATE_FIELDS);
 
     if (Object.keys(clean).length === 0) {
-      throw new Error('No valid fields to update');
+      throw new ValidationError('No valid fields to update');
     }
 
-    await db(this.TABLE).where({ id }).whereNull('completed_at').update(clean);
+    const affected = await db(this.TABLE)
+      .where({ id })
+      .whereNull('completed_at')
+      .update(clean);
 
+    if (!affected) return undefined;
     return this.getByID(id);
   }
 }

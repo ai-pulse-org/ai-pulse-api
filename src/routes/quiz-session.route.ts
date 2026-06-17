@@ -1,17 +1,18 @@
 import { Router } from 'express';
-import { validate } from '../middlewares/validate';
+import { requestValidator } from '../middlewares/requestValidator';
 import { CreateQuizSessionRequestSchema } from '../dtos/quiz-session.dto';
 import { QuizSessionController } from '../controllers/quiz-session.controller';
+import { asyncHandler } from '../middlewares/asyncHandler';
 
 const router = Router();
 const controller = new QuizSessionController();
 
-router.get('/quiz-sessions', controller.getQuizSessions);
-router.get('/quiz-sessions/:id', controller.getQuizSessionByID);
+router.get('/quiz-sessions', asyncHandler(controller.getQuizSessions));
+router.get('/quiz-sessions/:id', asyncHandler(controller.getQuizSessionByID));
 router.post(
   '/quiz-sessions',
-  validate(CreateQuizSessionRequestSchema),
-  controller.createQuizSession,
+  requestValidator(CreateQuizSessionRequestSchema),
+  asyncHandler(controller.createQuizSession),
 );
-router.patch('/quiz-sessions/:id', controller.updateQuizSession);
+router.patch('/quiz-sessions/:id', asyncHandler(controller.updateQuizSession));
 export default router;

@@ -1,18 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
+import { AppError } from '../errors/AppError';
 
 // Centralized error handling middleware
+// A middleware function to handle errors thrown in the application
 const errorHandler = (
-  err: Error,
+  err: unknown,
   req: Request,
   res: Response,
   next: NextFunction,
 ): void => {
-  console.error(err.stack);
+  console.error(err);
+
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({
+      message: err.message,
+    });
+    return;
+  }
 
   res.status(500).json({
-    status: 500,
-    message: 'Something went wrong',
-    error: err.message,
+    message: 'Internal Server Error',
   });
 };
 
