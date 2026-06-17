@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import errorHandler from './middlewares/errorHandler';
 import healthRoutes from './routes/health.route';
-import quizRoutes from './routes/quiz-session.route';
+import quizSessionRoutes from './routes/quiz-session.route';
+import quizRoutes from './routes/quiz.route';
 
 const app = express();
 
@@ -12,7 +13,8 @@ app.use(express.json());
 
 // Routes
 app.use('/', healthRoutes);
-app.use('/', quizRoutes);
+app.use('/', quizSessionRoutes);
+app.use('/quiz', quizRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

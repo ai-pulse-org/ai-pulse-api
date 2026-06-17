@@ -49,8 +49,10 @@ export class QuizSessionRepository {
     return this.mapToResponse(row);
   }
 
-  async create(dto: CreateQuizSessionRequest): Promise<number> {
-    const [id] = await db(this.TABLE).insert({
+  async create(dto: CreateQuizSessionRequest, trx?: any): Promise<number> {
+    const query = trx ?? db;
+
+    const [id] = await query(this.TABLE).insert({
       difficulty_level_id: dto.difficulty_level_id,
       total_questions: dto.total_questions,
       quiz_status_id: dto.quiz_status_id,

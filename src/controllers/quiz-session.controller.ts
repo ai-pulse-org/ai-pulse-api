@@ -1,19 +1,17 @@
 import { Request, Response } from 'express';
 import { handleResponse } from '../utils/handleResponse';
-import { getErrorMessage } from '../utils/getErrorMessage';
-import { AppError } from '../errors/AppError';
 import { QuizSessionService } from '../services/quiz-session.service';
 import { BadRequestError } from '../errors/BadRequestError';
 export class QuizSessionController {
   private service = new QuizSessionService();
 
-  getQuizSessions = async (req: Request, res: Response): Promise<void> => {
-    const sessions = await this.service.getQuizSessions();
+  getAllQuizSessions = async (req: Request, res: Response): Promise<void> => {
+    const sessions = await this.service.getAllQuizSessions();
 
     return handleResponse(
       res,
       200,
-      'Quiz sessions fetched successfully',
+      'All Quiz Sessions fetched successfully',
       sessions,
     );
   };

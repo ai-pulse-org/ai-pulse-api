@@ -9,7 +9,7 @@ import { QuizSessionRepository } from '../repositories/quiz-session.repository';
 export class QuizSessionService {
   private repository = new QuizSessionRepository();
 
-  async getQuizSessions(): Promise<QuizSessionResponse[]> {
+  async getAllQuizSessions(): Promise<QuizSessionResponse[]> {
     return this.repository.getAll();
   }
 

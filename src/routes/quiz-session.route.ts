@@ -7,7 +7,7 @@ import { asyncHandler } from '../middlewares/asyncHandler';
 const router = Router();
 const controller = new QuizSessionController();
 
-router.get('/quiz-sessions', asyncHandler(controller.getQuizSessions));
+router.get('/quiz-sessions', asyncHandler(controller.getAllQuizSessions));
 router.get('/quiz-sessions/:id', asyncHandler(controller.getQuizSessionByID));
 router.post(
   '/quiz-sessions',
