@@ -1,4 +1,4 @@
-import { env } from './env';
+import { env } from './env.utils';
 
 export const getErrorMessage = (error: unknown): string => {
   console.error(error);
@@ -6,5 +6,5 @@ export const getErrorMessage = (error: unknown): string => {
     return error.message;
   }
 
-  return 'Something went wrong';
+  return 'Something went wrong.';
 };

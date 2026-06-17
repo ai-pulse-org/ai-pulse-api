@@ -39,7 +39,7 @@ export class QuizSessionService {
 
     return this.repository.create(dto);
   }
-  //
+
   async updateQuizSession(
     id: number,
     dto: UpdateQuizSessionRequest,

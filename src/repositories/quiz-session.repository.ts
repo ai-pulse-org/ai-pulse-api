@@ -1,4 +1,5 @@
 import { db } from '../config/knex';
+import { sanitizeUpdate } from '../utils/sanitize-update.util';
 import {
   CreateQuizSessionRequest,
   QuizSessionRecord,
@@ -7,6 +8,7 @@ import {
 } from '../dtos/quiz-session.dto';
 
 export class QuizSessionRepository {
+  // Private members
   private TABLE = 'quiz_sessions';
 
   private ALLOWED_UPDATE_FIELDS: (keyof UpdateQuizSessionRequest)[] = [
@@ -14,19 +16,6 @@ export class QuizSessionRepository {
     'quiz_status_id',
     'score_total',
   ];
-
-  private sanitizeUpdate(dto: UpdateQuizSessionRequest) {
-    const entries = Object.entries(dto).filter(([key, value]) => {
-      return (
-        value !== undefined &&
-        this.ALLOWED_UPDATE_FIELDS.includes(
-          key as keyof UpdateQuizSessionRequest,
-        )
-      );
-    });
-
-    return Object.fromEntries(entries);
-  }
 
   private mapToResponse(row: QuizSessionRecord): QuizSessionResponse {
     return {
@@ -41,8 +30,9 @@ export class QuizSessionRepository {
     };
   }
 
+  // Public methods
   async getAll(): Promise<QuizSessionResponse[]> {
-    const rows: QuizSessionRecord[] = await db(this.TABLE)
+    const rows: QuizSessionRecord[] = await db('vw_quiz_sessions')
       .select('*')
       .orderBy('id', 'desc');
     const responses = rows.map((row) => this.mapToResponse(row));
@@ -72,16 +62,13 @@ export class QuizSessionRepository {
     id: number,
     dto: UpdateQuizSessionRequest,
   ): Promise<QuizSessionResponse | undefined> {
-    const clean = this.sanitizeUpdate(dto);
+    const clean = sanitizeUpdate(dto, this.ALLOWED_UPDATE_FIELDS);
 
     if (Object.keys(clean).length === 0) {
       throw new Error('No valid fields to update');
     }
 
-    await db(this.TABLE)
-      .where({ id })
-      .andWhere('completed_at', null)
-      .update(clean);
+    await db(this.TABLE).where({ id }).whereNull('completed_at').update(clean);
 
     return this.getByID(id);
   }

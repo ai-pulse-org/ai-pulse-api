@@ -6,13 +6,12 @@ import quizRoutes from './routes/quiz-session.route';
 
 const app = express();
 
-// Middleware
+// CORS middleware
 app.use(cors());
 app.use(express.json());
 
 // Routes
 app.use('/', healthRoutes);
-
 app.use('/', quizRoutes);
 
 // Error handling middleware

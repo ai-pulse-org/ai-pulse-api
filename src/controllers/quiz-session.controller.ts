@@ -11,10 +11,15 @@ export class QuizSessionController {
     try {
       const sessions = await this.service.getQuizSessions();
 
-      handleResponse(res, 200, 'Quiz sessions fetched successfully', sessions);
+      return handleResponse(
+        res,
+        200,
+        'Quiz sessions fetched successfully',
+        sessions,
+      );
     } catch (error: unknown) {
       console.error(error);
-      handleResponse(res, 500, getErrorMessage(error));
+      return handleResponse(res, 500, getErrorMessage(error));
     }
   };
 
@@ -28,14 +33,19 @@ export class QuizSessionController {
 
       const session = await this.service.getQuizSessionsByID(id);
 
-      handleResponse(res, 200, 'Quiz session fetched successfully', session);
+      return handleResponse(
+        res,
+        200,
+        'Quiz session fetched successfully',
+        session,
+      );
     } catch (error: unknown) {
       console.error(error);
 
       if (error instanceof NotFoundError) {
-        handleResponse(res, 404, error.message);
+        return handleResponse(res, 404, error.message);
       }
-      handleResponse(res, 500, getErrorMessage(error));
+      return handleResponse(res, 500, getErrorMessage(error));
     }
   };
 
@@ -43,10 +53,12 @@ export class QuizSessionController {
     try {
       const id = await this.service.addQuizSession(req.body);
 
-      handleResponse(res, 201, 'Quiz session created successfully', { id });
+      return handleResponse(res, 201, 'Quiz session created successfully', {
+        id,
+      });
     } catch (error: unknown) {
       console.error(error);
-      handleResponse(res, 400, getErrorMessage(error));
+      return handleResponse(res, 500, getErrorMessage(error));
     }
   };
 
