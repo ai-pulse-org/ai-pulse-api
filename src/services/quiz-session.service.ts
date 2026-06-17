@@ -13,9 +13,7 @@ export class QuizSessionService {
     return this.repository.getAll();
   }
 
-  async getQuizSessionsByID(
-    id: number,
-  ): Promise<QuizSessionResponse | undefined> {
+  async getQuizSessionsByID(id: number): Promise<QuizSessionResponse> {
     const session = await this.repository.getByID(id);
 
     if (!session) {
@@ -25,18 +23,6 @@ export class QuizSessionService {
   }
 
   async addQuizSession(dto: CreateQuizSessionRequest): Promise<number> {
-    if (!dto.difficulty_level_id) {
-      throw new Error('Difficulty level is required');
-    }
-
-    if (!dto.total_questions || dto.total_questions <= 0) {
-      throw new Error('Total questions must be greater than zero');
-    }
-
-    if (!dto.quiz_status_id) {
-      throw new Error('Quiz status is required');
-    }
-
     return this.repository.create(dto);
   }
 

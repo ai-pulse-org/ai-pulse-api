@@ -30,7 +30,7 @@ export class QuizSessionRepository {
     };
   }
 
-  // Public methods
+  // Public members
   async getAll(): Promise<QuizSessionResponse[]> {
     const rows: QuizSessionRecord[] = await db('vw_quiz_sessions')
       .select('*')

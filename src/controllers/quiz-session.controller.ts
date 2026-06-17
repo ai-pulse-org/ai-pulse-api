@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import { handleResponse } from '../utils/handleResponse';
 import { getErrorMessage } from '../utils/getErrorMessage';
-import { NotFoundError } from '../errors/NotFoundError';
+import { AppError } from '../errors/AppError';
 import { QuizSessionService } from '../services/quiz-session.service';
-
 export class QuizSessionController {
   private service = new QuizSessionService();
 
@@ -42,8 +41,8 @@ export class QuizSessionController {
     } catch (error: unknown) {
       console.error(error);
 
-      if (error instanceof NotFoundError) {
-        return handleResponse(res, 404, error.message);
+      if (error instanceof AppError) {
+        return handleResponse(res, error.statusCode, error.message);
       }
       return handleResponse(res, 500, getErrorMessage(error));
     }

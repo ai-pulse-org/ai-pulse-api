@@ -1,30 +1,56 @@
-// Create request payload. - Fields that are required to create a record
-export interface CreateQuizSessionRequest {
-  difficulty_level_id: number;
-  total_questions: number;
-  quiz_status_id: number;
-}
+import { z } from 'zod';
 
-// Update request payload. - Fields that can be updated.
-export interface UpdateQuizSessionRequest {
-  current_question_index?: number;
-  quiz_status_id?: number;
-  score_total?: number;
-}
+/**
+ * -----------------------------
+ * Create request payload. - Fields that are required to create a record
+ * -----------------------------
+ */
+export const CreateQuizSessionRequestSchema = z.object({
+  difficulty_level_id: z.number().int().positive(),
+  total_questions: z.number().int().min(1),
+  quiz_status_id: z.number().int().positive(),
+});
 
-// API response for data - To pass around the application and to send to the client.
+export type CreateQuizSessionRequest = z.infer<
+  typeof CreateQuizSessionRequestSchema
+>;
+
+/**
+ * -----------------------------
+ * Update request payload. - Fields that can be updated.
+ * -----------------------------
+ */
+export const UpdateQuizSessionRequestSchema = z.object({
+  current_question_index: z.number().int().min(0).optional(),
+  quiz_status_id: z.number().int().positive().optional(),
+  score_total: z.number().min(0).optional(),
+});
+
+export type UpdateQuizSessionRequest = z.infer<
+  typeof UpdateQuizSessionRequestSchema
+>;
+
+/**
+ * -----------------------------
+ * API response for data - To pass around the application and to send to the client.
+ * -----------------------------
+ */
 export interface QuizSessionResponse {
   id: number;
   difficulty_level_id: number;
   difficulty_level: string;
   total_questions: number;
-  current_question_index?: number;
+  current_question_index: number;
   quiz_status_id: number;
   quiz_status: string;
-  score_total?: number;
+  score_total: number;
 }
 
-// Represents database record - To map the database record to the API response.
+/**
+ * -----------------------------
+ * Represents database record - To map the database record to the API response.
+ * -----------------------------
+ */
 export interface QuizSessionRecord {
   id: number;
   difficulty_level_id: number;
