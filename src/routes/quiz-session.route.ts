@@ -15,4 +15,5 @@ router.post(
   asyncHandler(controller.createQuizSession),
 );
 router.patch('/quiz-sessions/:id', asyncHandler(controller.updateQuizSession));
+
 export default router;

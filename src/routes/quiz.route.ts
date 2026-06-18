@@ -12,7 +12,9 @@ const controller = new QuizController();
 
 // POST /quiz/start/
 // POST /quiz/answer/
-// GET? /quiz/report/:{id}   (session_id)
+// POST? /quiz/:id/report/   (session_id)
+
+// GET /quiz/:id   (session_id) - This is to resume/reload a quiz. Works same as POST: /quiz/start/ but doesn't start the new quiz
 
 router.post(
   '/start',
@@ -25,5 +27,7 @@ router.post(
   requestValidator(SubmitAnswerRequestSchema),
   asyncHandler(controller.submitAnswer),
 );
+
+router.post('/:id/report', asyncHandler(controller.createOrGetReport));
 
 export default router;
