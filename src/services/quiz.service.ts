@@ -1,4 +1,4 @@
-import { TestResponse, CreateQuizSessionRequest } from '../dtos/quiz.dto';
+import { CreateQuizSessionRequest } from '../dtos/quiz.dto';
 import { QuizRepository } from '../repositories/quiz.repository';
 import { db as knex } from '../config/knex';
 import { QuestionService } from '../services/question.service';
@@ -10,12 +10,8 @@ export class QuizService {
   private repository = new QuizRepository();
 
   private questionService = new QuestionService();
-  private quizQuestionRepository = new QuizQuestionRepository(); // ToDo : Access repository via service
-  private quizSessionRepository = new QuizSessionRepository(); // ToDo : Access repository via service
-
-  async test(): Promise<TestResponse> {
-    return this.repository.test();
-  }
+  private quizQuestionRepository = new QuizQuestionRepository();
+  private quizSessionRepository = new QuizSessionRepository();
 
   async startQuiz(dto: CreateQuizSessionRequest) {
     const questionIds = await this.questionService.getRandomQuestions(10);
@@ -33,9 +29,22 @@ export class QuizService {
       // Bulk insert
       await this.quizQuestionRepository.bulkInsertIgnore(rows, trx);
 
-      return {
+      // Get session and first question
+      const session = await this.quizSessionRepository.getByID(sessionId, trx);
+
+      const firstQuestion = await this.repository.getNextQuestion(
         sessionId,
-        questionsInserted: rows.length,
+        trx,
+      );
+
+      // return {
+      //   sessionId,
+      //   questionsInserted: rows.length,
+      // };
+
+      return {
+        session,
+        firstQuestion,
       };
     });
   }

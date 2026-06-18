@@ -2,6 +2,41 @@ import { z } from 'zod';
 
 /**
  * -----------------------------
+ * Represents database record - To map the database record to the API response.
+ * -----------------------------
+ */
+export type QuizSessionRecord = {
+  id: number;
+  difficulty_level_id: number;
+  difficulty_level: string;
+  total_questions: number;
+  current_question_index: number;
+  quiz_status_id: number;
+  quiz_status: string;
+  score_total: number;
+  created_at: Date;
+  completed_at?: Date | null;
+};
+
+/**
+ * -----------------------------
+ * API response for data - To pass around the application and to send to the client.
+ * -----------------------------
+ */
+export type QuizSessionResponse = Pick<
+  QuizSessionRecord,
+  | 'id'
+  | 'difficulty_level_id'
+  | 'difficulty_level'
+  | 'total_questions'
+  | 'current_question_index'
+  | 'quiz_status_id'
+  | 'quiz_status'
+  | 'score_total'
+>;
+
+/**
+ * -----------------------------
  * Create request payload. - Fields that are required to create a record
  * -----------------------------
  */
@@ -29,37 +64,3 @@ export const UpdateQuizSessionRequestSchema = z.object({
 export type UpdateQuizSessionRequest = z.infer<
   typeof UpdateQuizSessionRequestSchema
 >;
-
-/**
- * -----------------------------
- * API response for data - To pass around the application and to send to the client.
- * -----------------------------
- */
-export interface QuizSessionResponse {
-  id: number;
-  difficulty_level_id: number;
-  difficulty_level: string;
-  total_questions: number;
-  current_question_index: number;
-  quiz_status_id: number;
-  quiz_status: string;
-  score_total: number;
-}
-
-/**
- * -----------------------------
- * Represents database record - To map the database record to the API response.
- * -----------------------------
- */
-export interface QuizSessionRecord {
-  id: number;
-  difficulty_level_id: number;
-  difficulty_level: string;
-  total_questions: number;
-  current_question_index: number;
-  quiz_status_id: number;
-  quiz_status: string;
-  score_total: number;
-  created_at: Date;
-  completed_at?: Date | null;
-}

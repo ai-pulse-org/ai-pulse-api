@@ -40,8 +40,13 @@ export class QuizSessionRepository {
     return responses;
   }
 
-  async getByID(id: number): Promise<QuizSessionResponse | undefined> {
-    const row: QuizSessionRecord = await db('vw_quiz_sessions')
+  async getByID(
+    id: number,
+    trx?: any,
+  ): Promise<QuizSessionResponse | undefined> {
+    const query = trx ?? db;
+
+    const row: QuizSessionRecord = await query('vw_quiz_sessions')
       .select('*')
       .where('id', id)
       .first();
