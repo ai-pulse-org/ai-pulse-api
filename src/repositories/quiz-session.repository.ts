@@ -28,6 +28,7 @@ export class QuizSessionRepository {
       quiz_status_id: row.quiz_status_id,
       quiz_status: row.quiz_status,
       score_total: row.score_total,
+      completed_at: row.completed_at,
     };
   }
 

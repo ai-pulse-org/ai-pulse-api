@@ -1,11 +1,39 @@
 import { db } from '../config/knex';
-import { CreateQuizQuestionRequest } from '../dtos/quiz-question.dto';
+import {
+  CreateQuizQuestionRequest,
+  QuizQuestionResponse,
+  QuizQuestionRecord,
+} from '../dtos/quiz-question.dto';
 
 export class QuizQuestionRepository {
   private TABLE = 'quiz_questions';
 
-  async create(dto: CreateQuizQuestionRequest): Promise<number> {
-    const [id] = await db(this.TABLE).insert({
+  private mapToResponse(row: QuizQuestionRecord): QuizQuestionResponse {
+    return {
+      id: row.id,
+      session_id: row.session_id,
+      question_id: row.question_id,
+      question_order: row.question_order,
+    };
+  }
+
+  async getByID(
+    id: number,
+    trx?: any,
+  ): Promise<QuizQuestionResponse | undefined> {
+    const query = trx ?? db;
+
+    const row: QuizQuestionRecord = await query(this.TABLE)
+      .select('*')
+      .where('id', id)
+      .first();
+    if (!row) return undefined;
+    return this.mapToResponse(row);
+  }
+
+  async create(dto: CreateQuizQuestionRequest, trx?: any): Promise<number> {
+    const query = trx ?? db;
+    const [id] = await query(this.TABLE).insert({
       session_id: dto.session_id,
       question_id: dto.question_id,
       question_order: dto.question_order,

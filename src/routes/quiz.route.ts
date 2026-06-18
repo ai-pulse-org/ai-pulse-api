@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { requestValidator } from '../middlewares/requestValidator';
-import { CreateQuizSessionRequestSchema } from '../dtos/quiz.dto';
+import {
+  StartQuizRequestSchema,
+  SubmitAnswerRequestSchema,
+} from '../dtos/quiz.dto';
 import { QuizController } from '../controllers/quiz.controller';
 import { asyncHandler } from '../middlewares/asyncHandler';
 
@@ -13,8 +16,14 @@ const controller = new QuizController();
 
 router.post(
   '/start',
-  requestValidator(CreateQuizSessionRequestSchema),
+  requestValidator(StartQuizRequestSchema),
   asyncHandler(controller.startQuiz),
+);
+
+router.post(
+  '/answer',
+  requestValidator(SubmitAnswerRequestSchema),
+  asyncHandler(controller.submitAnswer),
 );
 
 export default router;

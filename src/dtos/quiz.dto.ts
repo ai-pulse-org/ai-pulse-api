@@ -1,25 +1,15 @@
 import { z } from 'zod';
 
-/**
- * -----------------------------
- * Create request payload. - Fields that are required to start new quiz
- * -----------------------------
- */
-export const CreateQuizSessionRequestSchema = z.object({
+// Start Quiz Request payload
+export const StartQuizRequestSchema = z.object({
   difficulty_level_id: z.number().int().positive(),
   total_questions: z.number().int().min(1),
   quiz_status_id: z.number().int().positive(),
 });
 
-export type CreateQuizSessionRequest = z.infer<
-  typeof CreateQuizSessionRequestSchema
->;
+export type StartQuizRequest = z.infer<typeof StartQuizRequestSchema>;
 
-/**
- * -----------------------------
- * Represents database record - To map the database record to the API response.
- * -----------------------------
- */
+// Represents database record - To map the database record to the API response.
 export type QuizQuestionAnswerRecord = {
   // Quiz question
   quiz_question_id: number;
@@ -70,11 +60,7 @@ export type QuizQuestionAnswerRecord = {
   scored_at: string | null;
 };
 
-/**
- * -----------------------------
- * API response for data - To pass around the application and to send to the client.
- * -----------------------------
- */
+//  API response for data - To pass around the application and to send to the client.
 export type QuizQuestionAnswerResponse = Pick<
   QuizQuestionAnswerRecord,
   | 'quiz_question_id'
@@ -88,3 +74,13 @@ export type QuizQuestionAnswerResponse = Pick<
   | 'category_id'
   | 'category'
 >;
+
+// Submit Answer Request payload
+export const SubmitAnswerRequestSchema = z.object({
+  quiz_question_id: z.number().int().positive(),
+  session_id: z.number().int().positive(),
+  question_id: z.number().int().positive(),
+  user_answer: z.string().trim().min(1).max(1000),
+});
+
+export type SubmitAnswerRequest = z.infer<typeof SubmitAnswerRequestSchema>;

@@ -5,7 +5,6 @@ import { QuizQuestionRepository } from '../repositories/quiz-question.repository
 export class QuizQuestionService {
   private repository = new QuizQuestionRepository();
 
-  // ToDo: Not in use yet
   async addQuizQuestion(dto: CreateQuizQuestionRequest): Promise<number> {
     return this.repository.create(dto);
   }

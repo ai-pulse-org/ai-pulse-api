@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-/**
- * -----------------------------
- * Represents database record - To map the database record to the API response.
- * -----------------------------
- */
+// Represents database record - To map the database record to the API response.
 export type QuizSessionRecord = {
   id: number;
   difficulty_level_id: number;
@@ -18,11 +14,7 @@ export type QuizSessionRecord = {
   completed_at?: Date | null;
 };
 
-/**
- * -----------------------------
- * API response for data - To pass around the application and to send to the client.
- * -----------------------------
- */
+// API response for data - To pass around the application and to send to the client.
 export type QuizSessionResponse = Pick<
   QuizSessionRecord,
   | 'id'
@@ -33,13 +25,10 @@ export type QuizSessionResponse = Pick<
   | 'quiz_status_id'
   | 'quiz_status'
   | 'score_total'
+  | 'completed_at'
 >;
 
-/**
- * -----------------------------
- * Create request payload. - Fields that are required to create a record
- * -----------------------------
- */
+// Create request payload - Fields that are required to create a record
 export const CreateQuizSessionRequestSchema = z.object({
   difficulty_level_id: z.number().int().positive(),
   total_questions: z.number().int().min(1),
@@ -50,11 +39,7 @@ export type CreateQuizSessionRequest = z.infer<
   typeof CreateQuizSessionRequestSchema
 >;
 
-/**
- * -----------------------------
- * Update request payload. - Fields that can be updated.
- * -----------------------------
- */
+// Update request payload. - Fields that can be updated.
 export const UpdateQuizSessionRequestSchema = z.object({
   current_question_index: z.number().int().min(0).optional(),
   quiz_status_id: z.number().int().positive().optional(),
