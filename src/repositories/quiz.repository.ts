@@ -9,8 +9,6 @@ import {
 } from '../dtos/quiz.dto';
 
 export class QuizRepository {
-  // private TABLE = 'vw_quiz_question_answers';
-
   private mapNextQuestionToResponse(
     row: QuizQuestionAnswerRecord,
   ): QuizQuestionAnswerResponse {

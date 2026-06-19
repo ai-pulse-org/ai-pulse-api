@@ -1,12 +1,11 @@
+import { db as knex } from '../config/knex';
 import { NotFoundError } from '../errors/NotFoundError';
 import { ValidationError } from '../errors/ValidationError';
 import { StartQuizRequest, SubmitAnswerRequest } from '../dtos/quiz.dto';
 import { QuizRepository } from '../repositories/quiz.repository';
-import { db as knex } from '../config/knex';
 import { QuestionService } from '../services/question.service';
 import { CreateQuizQuestionRequest } from '../dtos/quiz-question.dto';
 import { QuizSessionRepository } from '../repositories/quiz-session.repository';
-import { UpdateQuizSessionRequest } from '../dtos/quiz-session.dto';
 import { QuizQuestionRepository } from '../repositories/quiz-question.repository';
 import { QuizAnswerRepository } from '../repositories/quiz-answer.repository';
 import { CreateQuizAnswerRequest } from '../dtos/quiz-answer.dto';
@@ -41,18 +40,27 @@ export class QuizService {
       // Bulk insert
       await this.quizQuestionRepository.bulkInsertIgnore(rows, trx);
 
-      // Get session and first question
-      const session = await this.quizSessionRepository.getByID(sessionId, trx);
-      const questionToAnswer = await this.repository.getNextQuestion(
-        sessionId,
-        trx,
-      );
-
-      return {
-        session,
-        questionToAnswer,
-      };
+      return this.getQuiz(sessionId, trx);
     });
+  }
+
+  async getQuiz(session_id: number, trx?: Knex.Transaction) {
+    const query = trx ?? knex;
+    const session = await this.quizSessionRepository.getByID(session_id, query);
+
+    if (!session) {
+      throw new NotFoundError('Quiz session not found');
+    }
+
+    const questionToAnswer = await this.repository.getNextQuestion(
+      session_id,
+      query,
+    );
+
+    return {
+      session,
+      questionToAnswer,
+    };
   }
 
   async submitAnswer(dto: SubmitAnswerRequest) {

@@ -22,6 +22,20 @@ export class QuizController {
     });
   };
 
+  getQuiz = async (req: Request, res: Response): Promise<void> => {
+    const session_id = Number(req.params.id);
+
+    if (Number.isNaN(session_id)) {
+      throw new BadRequestError('Invalid session id');
+    }
+
+    const quiz = await this.service.getQuiz(session_id);
+
+    return handleResponse(res, 200, 'Quiz fetched successfully', {
+      quiz,
+    });
+  };
+
   createOrGetReport = async (req: Request, res: Response): Promise<void> => {
     const session_id = Number(req.params.id);
 

@@ -28,6 +28,8 @@ router.post(
   asyncHandler(controller.submitAnswer),
 );
 
+router.get('/:id', asyncHandler(controller.getQuiz));
+
 router.post('/:id/report', asyncHandler(controller.createOrGetReport));
 
 export default router;
