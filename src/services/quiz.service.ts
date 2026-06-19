@@ -44,7 +44,7 @@ export class QuizService {
     });
   }
 
-  async getQuiz(session_id: number, trx?: Knex.Transaction) {
+  async getQuiz(session_id: number, trx?: any) {
     const query = trx ?? knex;
     const session = await this.quizSessionRepository.getByID(session_id, query);
 

@@ -10,12 +10,6 @@ import { asyncHandler } from '../middlewares/asyncHandler';
 const router = Router();
 const controller = new QuizController();
 
-// POST /quiz/start/
-// POST /quiz/answer/
-// POST? /quiz/:id/report/   (session_id)
-
-// GET /quiz/:id   (session_id) - This is to resume/reload a quiz. Works same as POST: /quiz/start/ but doesn't start the new quiz
-
 router.post(
   '/start',
   requestValidator(StartQuizRequestSchema),

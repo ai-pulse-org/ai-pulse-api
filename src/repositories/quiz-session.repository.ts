@@ -7,6 +7,7 @@ import {
   UpdateQuizSessionRequest,
 } from '../dtos/quiz-session.dto';
 import { ValidationError } from '../errors/ValidationError';
+import { QuizStatus } from '../constants/quiz-status.constants';
 
 export class QuizSessionRepository {
   // Private members
@@ -94,7 +95,7 @@ export class QuizSessionRepository {
     score_total: number,
   ): Promise<QuizSessionResponse | undefined> {
     const qsDto: UpdateQuizSessionRequest = {
-      quiz_status_id: 2,
+      quiz_status_id: QuizStatus.IN_PROGRESS,
       current_question_index: current_question_index,
       score_total: score_total,
     };
@@ -103,7 +104,7 @@ export class QuizSessionRepository {
 
   async markAsCompleted(id: number): Promise<QuizSessionResponse | undefined> {
     const qsDto: UpdateQuizSessionRequest = {
-      quiz_status_id: 3,
+      quiz_status_id: QuizStatus.COMPLETED,
       completed_at: new Date(),
     };
     return await this.update(id, qsDto);

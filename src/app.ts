@@ -4,6 +4,7 @@ import errorHandler from './middlewares/errorHandler';
 import healthRoutes from './routes/health.route';
 import quizSessionRoutes from './routes/quiz-session.route';
 import quizRoutes from './routes/quiz.route';
+import lookupRoutes from './routes/lookup.route';
 
 const app = express();
 
@@ -15,8 +16,9 @@ app.use(express.json());
 app.use('/', healthRoutes);
 app.use('/', quizSessionRoutes);
 app.use('/quiz', quizRoutes);
+app.use('/lookup', lookupRoutes);
 
-// Error handling middleware
+// Error handling middleware - Note: Keep this as last middleware
 app.use(errorHandler);
 
 export default app;

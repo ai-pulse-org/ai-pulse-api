@@ -68,8 +68,6 @@ export type QuizQuestionAnswerResponse = Pick<
   | 'quiz_question_id'
   | 'session_id'
   | 'question_id'
-  | 'quiz_status_id'
-  | 'quiz_status'
   | 'question'
   | 'question_difficulty_level_id'
   | 'question_difficulty_level'
