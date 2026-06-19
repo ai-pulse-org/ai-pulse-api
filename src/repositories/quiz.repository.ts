@@ -33,21 +33,15 @@ export class QuizRepository {
   ): QuizReportSummaryResponse {
     return {
       session_id: row.session_id,
-
       difficulty_level_id: row.difficulty_level_id,
       difficulty_level: row.difficulty_level,
-
       total_questions: row.total_questions,
       current_question_index: row.current_question_index,
-
       quiz_status_id: row.quiz_status_id,
       quiz_status: row.quiz_status,
-
       score_total: row.score_total,
-
       session_created_at: row.session_created_at,
       completed_at: row.completed_at,
-
       report_id: row.report_id,
       total_score: row.total_score,
       percentage_score: row.percentage_score,
@@ -79,7 +73,6 @@ export class QuizRepository {
     trx?: any,
   ): Promise<QuizQuestionAnswerResponse | undefined> {
     const query = trx ?? db;
-
     const row: QuizQuestionAnswerRecord = await query(
       'vw_quiz_question_answers',
     )
@@ -97,7 +90,6 @@ export class QuizRepository {
     trx?: any,
   ): Promise<QuizReportSummaryResponse | undefined> {
     const query = trx ?? db;
-
     const row: QuizReportSummaryRecord = await query('vw_quiz_reports')
       .where('session_id', sessionId)
       .first();
@@ -111,7 +103,6 @@ export class QuizRepository {
     trx?: any,
   ): Promise<QuizReportQuestionsAndAnswersResponse[]> {
     const query = trx ?? db;
-
     const rows: QuizReportQuestionsAndAnswersRecord[] = await query(
       'vw_quiz_question_answers',
     )

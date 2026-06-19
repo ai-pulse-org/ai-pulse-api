@@ -93,21 +93,15 @@ export type SubmitAnswerRequest = z.infer<typeof SubmitAnswerRequestSchema>;
 // Represents database record - To map the database record to the API response.
 export type QuizReportSummaryRecord = {
   session_id: number;
-
   difficulty_level_id: number;
   difficulty_level: string | null;
-
   total_questions: number;
   current_question_index: number;
-
   quiz_status_id: number;
   quiz_status: string | null;
-
   score_total: number;
-
   session_created_at: string;
   completed_at: string | null;
-
   report_id: number | null;
   total_score: number | null;
   percentage_score: number | null;

@@ -24,7 +24,6 @@ export class QuizReportRepository {
     trx?: any,
   ): Promise<QuizReportResponse | undefined> {
     const query = trx ?? db;
-
     const row: QuizReportRecord = await query(this.TABLE)
       .select('*')
       .where('id', id)
@@ -38,7 +37,6 @@ export class QuizReportRepository {
     trx?: any,
   ): Promise<QuizReportResponse | undefined> {
     const query = trx ?? db;
-
     const row: QuizReportRecord = await query(this.TABLE)
       .select('*')
       .where('session_id', session_id)
@@ -58,7 +56,6 @@ export class QuizReportRepository {
       })
       .onConflict('session_id')
       .ignore();
-
     return id;
   }
 }

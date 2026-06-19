@@ -16,6 +16,7 @@ export class QuizSessionRepository {
     'current_question_index',
     'quiz_status_id',
     'score_total',
+    'completed_at',
   ];
 
   private mapToResponse(row: QuizSessionRecord): QuizSessionResponse {
@@ -84,5 +85,27 @@ export class QuizSessionRepository {
 
     if (!affected) return undefined;
     return this.getByID(id);
+  }
+
+  // Update (quiz_statud_id=IN_PROGRESS, current_question_index, score_total)
+  async markAsInProgres(
+    id: number,
+    current_question_index: number,
+    score_total: number,
+  ): Promise<QuizSessionResponse | undefined> {
+    const qsDto: UpdateQuizSessionRequest = {
+      quiz_status_id: 2,
+      current_question_index: current_question_index,
+      score_total: score_total,
+    };
+    return await this.update(id, qsDto);
+  }
+
+  async markAsCompleted(id: number): Promise<QuizSessionResponse | undefined> {
+    const qsDto: UpdateQuizSessionRequest = {
+      quiz_status_id: 3,
+      completed_at: new Date(),
+    };
+    return await this.update(id, qsDto);
   }
 }

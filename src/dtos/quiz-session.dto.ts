@@ -44,6 +44,7 @@ export const UpdateQuizSessionRequestSchema = z.object({
   current_question_index: z.number().int().min(0).optional(),
   quiz_status_id: z.number().int().positive().optional(),
   score_total: z.number().min(0).optional(),
+  completed_at: z.date().nullable().optional(),
 });
 
 export type UpdateQuizSessionRequest = z.infer<

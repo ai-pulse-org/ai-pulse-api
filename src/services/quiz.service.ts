@@ -6,6 +6,7 @@ import { db as knex } from '../config/knex';
 import { QuestionService } from '../services/question.service';
 import { CreateQuizQuestionRequest } from '../dtos/quiz-question.dto';
 import { QuizSessionRepository } from '../repositories/quiz-session.repository';
+import { UpdateQuizSessionRequest } from '../dtos/quiz-session.dto';
 import { QuizQuestionRepository } from '../repositories/quiz-question.repository';
 import { QuizAnswerRepository } from '../repositories/quiz-answer.repository';
 import { CreateQuizAnswerRequest } from '../dtos/quiz-answer.dto';
@@ -57,7 +58,7 @@ export class QuizService {
   async submitAnswer(dto: SubmitAnswerRequest) {
     return knex.transaction(async (trx) => {
       // Get session and validate
-      const session = await this.quizSessionRepository.getByID(
+      let session = await this.quizSessionRepository.getByID(
         dto.session_id,
         trx,
       );
@@ -107,9 +108,10 @@ export class QuizService {
         if (quizAnswerId) {
           // Save quiz score.
           // ToDo: Score the user answer using LLM-as-Judge and prepare metrics to save
+          const answer_score = 7;
           const qsDto: CreateQuizScoreRequest = {
             answer_id: quizAnswerId,
-            score: 7,
+            score: answer_score,
             feedback: 'Good response overall, but lacks supporting evidence.',
             rubric_version: 'RubricVersion1.2',
             model_used: 'qwen3:8b',
@@ -118,7 +120,14 @@ export class QuizService {
           };
           const quizScoreId = await this.quizScoreRepository.create(qsDto, trx);
 
-          // ToDo: Update quiz_sessions (current_question_index, quiz_statud_id=IN_PROGRESS, score_total)
+          // Mark quiz session as in progres
+          const current_question_index = quizQuestion.question_order;
+          const score_total = session.score_total + answer_score;
+          session = await this.quizSessionRepository.markAsInProgres(
+            dto.session_id,
+            current_question_index,
+            score_total,
+          );
         }
       }
 
@@ -133,7 +142,9 @@ export class QuizService {
 
       // Mark quiz session as completed
       if (!questionToAnswer) {
-        // ToDo: Update quiz_sessions (quiz_statud_id=COMPLETED, completed_at=Now())
+        session = await this.quizSessionRepository.markAsCompleted(
+          dto.session_id,
+        );
       }
 
       return {

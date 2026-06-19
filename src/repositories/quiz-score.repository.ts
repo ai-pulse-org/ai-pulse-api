@@ -7,7 +7,6 @@ import {
 
 export class QuizScoreRepository {
   private TABLE = 'quiz_scores';
-
   private mapToResponse(row: QuizScoreRecord): QuizScoreResponse {
     return {
       id: row.id,
@@ -24,7 +23,6 @@ export class QuizScoreRepository {
 
   async getByID(id: number, trx?: any): Promise<QuizScoreResponse | undefined> {
     const query = trx ?? db;
-
     const row: QuizScoreRecord = await query(this.TABLE)
       .select('*')
       .where('id', id)
@@ -38,7 +36,6 @@ export class QuizScoreRepository {
     trx?: any,
   ): Promise<QuizScoreResponse | undefined> {
     const query = trx ?? db;
-
     const row: QuizScoreRecord = await query(this.TABLE)
       .select('*')
       .where('answer_id', answer_id)
@@ -61,7 +58,6 @@ export class QuizScoreRepository {
       })
       .onConflict('answer_id')
       .ignore();
-
     return id;
   }
 }
