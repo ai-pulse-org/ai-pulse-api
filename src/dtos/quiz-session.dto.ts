@@ -1,4 +1,12 @@
 import { z } from 'zod';
+import {
+  DifficultyLevel,
+  DifficultyLevelSchema,
+} from '../constants/difficulty-level.constants';
+import {
+  TotalQuestions,
+  TotalQuestionsSchema,
+} from '../constants/total-questions.constants';
 
 // Represents database record - To map the database record to the API response.
 export type QuizSessionRecord = {
@@ -30,9 +38,8 @@ export type QuizSessionResponse = Pick<
 
 // Create request payload - Fields that are required to create a record
 export const CreateQuizSessionRequestSchema = z.object({
-  difficulty_level_id: z.number().int().positive(),
-  total_questions: z.number().int().min(1),
-  quiz_status_id: z.number().int().positive(),
+  difficulty_level_id: DifficultyLevelSchema.default(DifficultyLevel.BEGINNER),
+  total_questions: TotalQuestionsSchema.default(TotalQuestions.TEN),
 });
 
 export type CreateQuizSessionRequest = z.infer<

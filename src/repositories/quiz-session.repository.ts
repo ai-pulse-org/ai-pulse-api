@@ -63,7 +63,7 @@ export class QuizSessionRepository {
     const [id] = await query(this.TABLE).insert({
       difficulty_level_id: dto.difficulty_level_id,
       total_questions: dto.total_questions,
-      quiz_status_id: dto.quiz_status_id,
+      quiz_status_id: QuizStatus.NEW,
     });
 
     return id;
